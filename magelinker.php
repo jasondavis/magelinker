@@ -4,7 +4,7 @@ const DS = DIRECTORY_SEPARATOR;
 const DRY_RUN = false;
 const SHOW_PARAMS = false;
 
-if (SHOW_PARAMS || isset($_GET['debug'])) {
+if (SHOW_PARAMS || isset($_REQUEST['debug'])) {
 	echoParams();
 }
 
@@ -12,11 +12,11 @@ $magePath = getcwd();
 $modulePath = null;
 $isTbtModule = false;
 
-if (isset($_GET['module'])) {
-	$modulePath = $_GET['module'];
+if (isset($_REQUEST['module'])) {
+	$modulePath = $_REQUEST['module'];
 }
 
-if (isset($_GET['istbtmodule'])) {
+if (isset($_REQUEST['istbtmodule'])) {
 	$isTbtModule = true;
 }
 
@@ -32,7 +32,7 @@ if (isset($_GET['istbtmodule'])) {
 
 <p><b>Mage Path: </b><?php echo $magePath; ?></p>
 
-<form name="input" method="get">
+<form name="input" method="post" onsubmit="if(echo dirname($magePath) == this.module.value) { if(!confirm('You sure you want to link everything from <?php echo dirname($magePath) . DS; ?>?')) return false; }">
 	<b>Module Path: </b><input type="text" class="textBox" name="module" value="<?php echo dirname($magePath) . DS; ?>" /><br/><br/>
 	<input type="checkbox" name="istbtmodule" value="checked" checked="checked"/>Is TBT module<br /><br/>
 	<input type="submit" value="Submit" />
@@ -50,7 +50,7 @@ if (!$modulePath) {
 if (DRY_RUN) {
     echo '<p><b>DRY RUN (no linking will be done)</b></p>';
 }
-
+                      
 $linker = new MageLinker($magePath, $modulePath, $isTbtModule);
 $linker->link();
 echo '<p><b>Done.</b></p>';
